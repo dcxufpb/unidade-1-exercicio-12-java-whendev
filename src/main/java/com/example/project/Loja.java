@@ -47,9 +47,57 @@ public class Loja {
         this.endereco = endereco;
     }
 
+    public static Boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+
+    public void validarCamposObrigatorio(){
+        if (isNullOrEmpty(this.getNomeLoja())){
+            throw new RuntimeException("O campo nome da loja é obrigatório");
+        }
+
+        if (isNullOrEmpty(this.getCnpj())){
+            throw new RuntimeException("O campo cnpj da loja é obrigatório");
+        }
+
+        if (isNullOrEmpty(this.getInscricaoEstadual())) {
+            throw new RuntimeException("O campo inscrição estadual da loja é obrigatório");
+        }
+    }
+
+
     public String dadosLoja() {
 		// Implemente aqui
-		return null;
+        validarCamposObrigatorio();
+
+        String _CEP = "";
+        String _TELEFONE = "";
+
+        if (!isNullOrEmpty(endereco.getCep())) {
+            _CEP = "CEP:" + endereco.getCep();
+            if (!isNullOrEmpty(this.getTelefone())){
+                _TELEFONE = " Tel " + this.getTelefone();
+            }
+        } else {
+            _CEP = "";
+            if (!isNullOrEmpty(this.getTelefone())){
+                _TELEFONE = "Tel " + this.getTelefone();
+            }
+        }
+
+        String _OBSERVACAO = "";
+        if (!isNullOrEmpty(this.getObservacao())){
+            _OBSERVACAO = this.getObservacao();
+        }
+
+        String _texto = "";
+        _texto = String.format("%s\r\n",this.getNomeLoja());
+        _texto += endereco.dadosEndereco();
+        _texto += String.format("%s%s\r\n",_CEP,_TELEFONE);
+        _texto += String.format("%s\r\n",_OBSERVACAO);
+        _texto += String.format("CNPJ: %s\r\n",this.getCnpj());
+        _texto += String.format("IE: %s\r\n",this.getInscricaoEstadual());
+        return _texto;
 	}
 
 }
